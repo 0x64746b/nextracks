@@ -22,17 +22,21 @@
             }).addTo(map);
 
             const queryParams = new URLSearchParams(window.location.search);
+            const trackIds = queryParams.getAll('track')
 
-            // URL to your GPX file or the GPX itself as a XML string.
-            const url = `http://localhost:8000/track/${queryParams.get('track')}`;
             const options = {
                 async: true,
                 polyline_options: { color: 'red' },
             };
 
-            const gpx = new L.GPX(url, options).on('loaded', (e) => {
-                map.fitBounds(e.target.getBounds());
-            }).addTo(map);
+            for (const trackId of trackIds) {
+                // URL to your GPX file or the GPX itself as a XML string.
+                const url = `http://localhost:8000/track/${trackId}`;
+
+                const gpx = new L.GPX(url, options).on('loaded', (e) => {
+                    map.fitBounds(e.target.getBounds());
+                }).addTo(map);
+            }
         </script>
     </body>
 </html>
