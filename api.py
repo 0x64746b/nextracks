@@ -12,5 +12,5 @@ def serve() -> FileResponse:
 
 @app.get("/track/{id}")
 def fetch_track(id: str) -> Response:
-    xml = requests.get(f"https://{os.environ["NEXTRACKS_NC_DOMAIN"]}/index.php/s/{id}/download").content
+    xml = requests.get(f"https://{os.environ['NEXTRACKS_NC_DOMAIN']}/index.php/s/{id}/download").content
     return Response(content=xml, media_type="application/xml")
