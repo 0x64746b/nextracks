@@ -31,7 +31,7 @@
 
             for (const trackId of trackIds) {
                 // URL to your GPX file or the GPX itself as a XML string.
-                const url = `http://localhost:8000/track/${trackId}`;
+                const url = `/track/${trackId}`;
 
                 const gpx = new L.GPX(url, options).on('loaded', (e) => {
                     map.fitBounds(e.target.getBounds());
