@@ -17,8 +17,10 @@
                 attribution: 'Map data &copy; <a href="http://www.osm.org">OpenStreetMap</a>'
             }).addTo(map);
 
+            const queryParams = new URLSearchParams(window.location.search);
+
             // URL to your GPX file or the GPX itself as a XML string.
-            const url = 'http://localhost:8000?track=mYj2R6Hfm79osEg';
+            const url = `http://localhost:8000?track=${queryParams.get('track')}`;
             const options = {
                 async: true,
                 polyline_options: { color: 'red' },
