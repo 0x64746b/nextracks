@@ -17,6 +17,10 @@
                 attribution: 'Map data &copy; <a href="http://www.osm.org">OpenStreetMap</a>'
             }).addTo(map);
 
+            L.tileLayer('https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png', {
+                attribution: 'Map data: &copy; <a href="http://www.openseamap.org">OpenSeaMap</a> contributors'
+            }).addTo(map);
+
             const queryParams = new URLSearchParams(window.location.search);
 
             // URL to your GPX file or the GPX itself as a XML string.
