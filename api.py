@@ -1,14 +1,17 @@
 import os
 
-from fastapi import FastAPI
-from fastapi.responses import FileResponse, Response
+from fastapi import FastAPI, Request
+from fastapi.responses import FileResponse, HTMLResponse, Response
+from fastapi.templating import Jinja2Templates
 import requests
 
 app = FastAPI()
 
+templates = Jinja2Templates(directory="templates")
+
 @app.get("/")
-def serve() -> FileResponse:
-    return FileResponse("index.html")
+def serve(request: Request) -> HTMLResponse:
+    return templates.TemplateResponse(request=request, name="index.html")
 
 @app.get("/preview-image")
 def generate_preview_image() -> FileResponse:
