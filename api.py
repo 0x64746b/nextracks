@@ -19,6 +19,7 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/")
 def serve(request: Request) -> HTMLResponse:
+    request.scope['scheme'] = 'https' # FIXME: force generation of `HTTPS` URLs
     return templates.TemplateResponse(request=request, name="index.html")
 
 @app.get("/preview-image/{id}")
