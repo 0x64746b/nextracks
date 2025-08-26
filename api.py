@@ -31,9 +31,13 @@ def serve(request: Request) -> HTMLResponse:
 def generate_preview_image(track: Annotated[list[str], Query()]) -> Response:
     gpx = pd.DataFrame()
     for id in track:
-        response = requests.get(f"https://{os.environ['NEXTRACKS_NC_DOMAIN']}/index.php/s/{id}/download")
-        response.raise_for_status()
-        gpx = pd.concat([gpx, _parse_gpx(response.content)])
+        try:
+            response = requests.get(f"https://{os.environ['NEXTRACKS_NC_DOMAIN']}/index.php/s/{id}/download")
+            response.raise_for_status()
+        except requests.HTTPError as error:
+            print(f"ERROR: Failed to fetch track for preview image: {error}")
+        else:
+            gpx = pd.concat([gpx, _parse_gpx(response.content)])
     image: bytes = _plot_gpx(gpx)
 
     return Response(content=image, media_type="image/png")
