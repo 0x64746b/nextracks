@@ -26,7 +26,7 @@ def serve(request: Request) -> HTMLResponse:
     return templates.TemplateResponse(
         request=request,
         name="index.html",
-        context={'og_image_url': f"{ request.url_for('generate_preview_image') }?{ request.query_params }"},
+        context={"og_image_url": _construct_preview_image_url(request)},
     )
 
 @app.get("/preview-image")
@@ -54,6 +54,10 @@ def fetch_track(id: str) -> Response:
     response = requests.get(f"https://{os.environ['NEXTRACKS_NC_DOMAIN']}/index.php/s/{id}/download")
     response.raise_for_status()
     return Response(content=response.content, media_type="application/xml")
+
+def _construct_preview_image_url(request: Request) -> str:
+    track_params = "&".join([f"track={tid}" for tid in request.query_params.getlist("track")])
+    return f"{ request.url_for('generate_preview_image') }?{ track_params }"
 
 def _parse_gpx(xml: bytes) -> pd.DataFrame:
     with NamedTemporaryFile(delete_on_close=False, suffix='.gpx') as tmp_file:
