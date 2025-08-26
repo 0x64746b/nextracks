@@ -20,7 +20,9 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/")
 def serve(request: Request) -> HTMLResponse:
-    request.scope['scheme'] = 'https' # FIXME: force generation of `HTTPS` URLs
+    if original_proto := request.headers.get('x-forwarded-proto'):
+        request.scope['scheme'] = original_proto  # enable generation of `HTTPS` URLs
+
     return templates.TemplateResponse(
         request=request,
         name="index.html",
