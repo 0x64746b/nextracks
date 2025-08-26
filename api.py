@@ -1,6 +1,5 @@
 from io import BytesIO
 import os
-import socket
 from tempfile import NamedTemporaryFile
 
 from fastapi import FastAPI, Request
@@ -10,9 +9,6 @@ from gpx_converter import Converter
 import matplotlib
 from pandas import DataFrame
 import requests
-
-# force use of IPv6
-requests.packages.urllib3.util.connection.allowed_gai_family = lambda: socket.AF_INET6
 
 # Use non-interactive backend for plotting
 matplotlib.use('agg')
