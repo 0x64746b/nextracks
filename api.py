@@ -3,12 +3,14 @@ import os
 from tempfile import NamedTemporaryFile
 from typing import Annotated
 
+import contextily as cx
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import FileResponse, HTMLResponse, Response
 from fastapi.templating import Jinja2Templates
 from gpx_converter import Converter
 import matplotlib
 import pandas as pd
+from rasterio import CRS
 import requests
 
 # Use non-interactive backend for plotting
@@ -69,6 +71,7 @@ def _plot_gpx(data: pd.DataFrame) -> bytes:
     ax = data.plot(x='longitude', y='latitude')
     ax.set_axis_off()
     ax.get_legend().remove()
+    cx.add_basemap(ax, source=cx.providers.OpenStreetMap.DE, crs=CRS.from_epsg(4326))
 
     image_file = BytesIO()
     matplotlib.pyplot.savefig(image_file, format='png', bbox_inches='tight', pad_inches=0)
