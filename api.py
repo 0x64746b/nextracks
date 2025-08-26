@@ -71,6 +71,7 @@ def _plot_gpx(data: pd.DataFrame) -> bytes:
     ax = data.plot(x='longitude', y='latitude')
     ax.set_axis_off()
     ax.get_legend().remove()
+    ax.set_aspect('equal')
     cx.add_basemap(ax, source=cx.providers.OpenStreetMap.DE, crs=CRS.from_epsg(4326))
 
     image_file = BytesIO()
