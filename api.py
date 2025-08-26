@@ -29,6 +29,7 @@ def serve(request: Request) -> HTMLResponse:
 @app.get("/preview-image/{id}")
 def generate_preview_image(id: str) -> Response:
     response = requests.get(f"https://{os.environ['NEXTRACKS_NC_DOMAIN']}/index.php/s/{id}/download")
+    response.raise_for_status()
     gpx: DataFrame = _parse_gpx(response.content)
     image: bytes = _plot_gpx(gpx)
 
@@ -36,8 +37,9 @@ def generate_preview_image(id: str) -> Response:
 
 @app.get("/track/{id}")
 def fetch_track(id: str) -> Response:
-    xml = requests.get(f"https://{os.environ['NEXTRACKS_NC_DOMAIN']}/index.php/s/{id}/download").content
-    return Response(content=xml, media_type="application/xml")
+    response = requests.get(f"https://{os.environ['NEXTRACKS_NC_DOMAIN']}/index.php/s/{id}/download")
+    response.raise_for_status()
+    return Response(content=response.content, media_type="application/xml")
 
 def _parse_gpx(xml: bytes) -> DataFrame:
     with NamedTemporaryFile(delete_on_close=False, suffix='.gpx') as tmp_file:
