@@ -3,7 +3,7 @@ import os
 from tempfile import NamedTemporaryFile
 from typing import Annotated
 
-from fastapi import FastAPI, Query, Request
+from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import FileResponse, HTMLResponse, Response
 from fastapi.templating import Jinja2Templates
 from gpx_converter import Converter
@@ -30,6 +30,7 @@ def serve(request: Request) -> HTMLResponse:
 @app.get("/preview-image")
 def generate_preview_image(track: Annotated[list[str], Query()]) -> Response:
     gpx = pd.DataFrame()
+
     for id in track:
         try:
             response = requests.get(f"https://{os.environ['NEXTRACKS_NC_DOMAIN']}/index.php/s/{id}/download")
@@ -38,6 +39,10 @@ def generate_preview_image(track: Annotated[list[str], Query()]) -> Response:
             print(f"ERROR: Failed to fetch track for preview image: {error}")
         else:
             gpx = pd.concat([gpx, _parse_gpx(response.content)])
+
+    if gpx.empty:
+        raise HTTPException(status_code=400, detail="No valid tracks found")
+
     image: bytes = _plot_gpx(gpx)
 
     return Response(content=image, media_type="image/png")
