@@ -47,10 +47,12 @@ def _parse_gpx(xml: bytes) -> pd.DataFrame:
          return Converter(tmp_file.name).gpx_to_dataframe()
 
 def _plot_gpx(data: pd.DataFrame) -> bytes:
-    data.plot(x='longitude', y='latitude')
+    ax = data.plot(x='longitude', y='latitude')
+    ax.set_axis_off()
+    ax.get_legend().remove()
 
     image_file = BytesIO()
-    matplotlib.pyplot.savefig(image_file, format='png')
+    matplotlib.pyplot.savefig(image_file, format='png', bbox_inches='tight', pad_inches=0)
     image_file.seek(0)
 
     return image_file.read()
