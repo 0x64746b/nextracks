@@ -1,0 +1,20 @@
+[project]
+name = "nextracks"
+version = "0.1.0"
+description = "Visualize GPX tracks shared via Nextcloud"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "requests>=2.32.5",
+    "numpy==2.2.6", # manually pinned to force use of wheel
+    "contourpy==1.3.2", # manually pinned to force use of wheel
+    "fastapi>=0.116.1",
+    "gpx-converter>=2.1.0",
+    "matplotlib>=3.10.5",
+    "pandas>=2.3.2",
+    "uvicorn>=0.35.0",
+    "gunicorn>=23.0.0",
+    "uvloop>=0.21.0",
+    "httptools>=0.6.4",
+    "jinja2>=3.1.6",
+]
