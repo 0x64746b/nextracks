@@ -21,7 +21,11 @@ templates = Jinja2Templates(directory="templates")
 @app.get("/")
 def serve(request: Request) -> HTMLResponse:
     request.scope['scheme'] = 'https' # FIXME: force generation of `HTTPS` URLs
-    return templates.TemplateResponse(request=request, name="index.html")
+    return templates.TemplateResponse(
+        request=request,
+        name="index.html",
+        context={'og_image_url': f"{ request.url_for('generate_preview_image') }?{ request.query_params }"},
+    )
 
 @app.get("/preview-image")
 def generate_preview_image(track: Annotated[list[str], Query()]) -> Response:
