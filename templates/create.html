@@ -13,17 +13,42 @@
         <div id="link-fields"></div>
         <button id="add-link-field-button" class="bg-green-500 text-white px-4 py-2 my-1 rounded">Add another link</button>
       </div>
-      <button id="generate-visualization-button" class="bg-blue-500 text-white px-4 py-2 rounded">Generate the visualization</button>
+      <button id="generate-visualization-button" class="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-300">Generate the visualization</button>
     </div>
 
     <script type="module">
+        const SHARE_LINK_PATTERN = 'https://cloud.execvebin.sh/index.php/s/\\w+'
+        const LINK_CHECKER = RegExp(SHARE_LINK_PATTERN)
+
+        function validate_all_link_fields() {
+            var any_field_has_content = false
+            var no_field_is_invalid = true
+
+            for (const linkField of document.getElementsByName('link-field')) {
+                if (!!linkField.value) {
+                    any_field_has_content = true
+                }
+                if (!!linkField.value && !LINK_CHECKER.test(linkField.value)) {
+                    no_field_is_invalid = false
+                }
+            }
+
+            const submitButton = document.getElementById('generate-visualization-button')
+            if (any_field_has_content && no_field_is_invalid) {
+                submitButton.removeAttribute('disabled')
+            } else {
+                submitButton.setAttribute('disabled', true)
+            }
+        }
+
         function addLinkField() {
             const newLinkField = document.createElement('input')
             newLinkField.name = 'link-field'
             newLinkField.type = 'text'
             newLinkField.placeholder = 'Paste a Nextcloud share link'
             newLinkField.classList.add('border', 'p-2', 'w-full', 'my-1', 'outline-none', 'focus:border-blue-500', 'focus:invalid:border-pink-500', 'invalid:border-pink-500')
-            newLinkField.pattern = 'https://cloud.execvebin.sh/index.php/s/\\w+'
+            newLinkField.pattern = SHARE_LINK_PATTERN
+            newLinkField.addEventListener('input', validate_all_link_fields)
 
             document.getElementById('link-fields').appendChild(newLinkField)
         }
@@ -39,6 +64,7 @@
 
         // Add initial link field
         addLinkField()
+        validate_all_link_fields()
     </script>
   </body>
 </html>
