@@ -38,14 +38,25 @@
             newLinkField.placeholder = '{{ nextcloud_base_url }}/index.php/s/...'
             newLinkField.classList.add('border', 'p-2', 'w-full', 'my-1', 'outline-none', 'focus:border-blue-500', 'focus:invalid:border-pink-500', 'invalid:border-pink-500')
             newLinkField.pattern = SHARE_LINK_PATTERN
-            newLinkField.addEventListener('input', validate_all_link_fields)
+            newLinkField.addEventListener('input', process_link_fields)
             newLinkField.value = value
 
             document.getElementById('link-fields').appendChild(newLinkField)
         }
 
-        function validate_all_link_fields() {
-            // Extract IDs from share links
+        /**
+         * Update the URL state and manage the state of the submit button
+         */
+        function process_link_fields() {
+            const trackIds = _extractTrackIds()
+            _updateUrlState(trackIds)
+            _enableSubmitButton(!!trackIds.length)
+        }
+
+        /**
+         * Extract IDs from share links
+         */
+        function _extractTrackIds() {
             const trackIds = new Set()
             let trackMatch
 
@@ -55,13 +66,26 @@
                 }
             }
 
-            // Update URL with extracted IDs
-            const trackParams = new URLSearchParams(Array.from(trackIds).map(id => ['track', id]))
-            window.history.pushState(null, '', `?${ trackParams }`)
+            return Array.from(trackIds)
+        }
 
-            // Handle state of submit button
+        /**
+         * Persist track IDs in URL
+         *
+         * Prevent a page reload to avoid an infinite loop when initially
+         * validating the fields.
+         */
+        function _updateUrlState(trackIds) {
+            const targetUrl = trackIds.length ? `?${ new URLSearchParams(trackIds.map(id => ['track', id])) }` : window.location.pathname
+            window.history.pushState(null, '', targetUrl)
+        }
+
+        /**
+         * Handle state of submit button
+         */
+        function _enableSubmitButton(enable) {
             const submitButton = document.getElementById('generate-visualization-button')
-            if (!!trackIds.size) {
+            if (enable) {
                 submitButton.removeAttribute('disabled')
             } else {
                 submitButton.setAttribute('disabled', true)
@@ -79,7 +103,7 @@
 
         // Add initial link fields
         initializeLinkFields()
-        validate_all_link_fields()
+        process_link_fields()
     </script>
   </body>
 </html>
