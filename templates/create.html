@@ -17,7 +17,7 @@
     </div>
 
     <script type="module">
-        const SHARE_LINK_PATTERN = 'https://cloud.execvebin.sh/index.php/s/(\\w+)'
+        const SHARE_LINK_PATTERN = '{{ nextcloud_base_url }}/index.php/s/(\\w+)'
         const LINK_CHECKER = RegExp(SHARE_LINK_PATTERN)
 
         function validate_all_link_fields() {
@@ -45,7 +45,7 @@
             const newLinkField = document.createElement('input')
             newLinkField.name = 'link-field'
             newLinkField.type = 'text'
-            newLinkField.placeholder = 'https://cloud.execvebin.sh/index.php/s/...'
+            newLinkField.placeholder = '{{ nextcloud_base_url }}/index.php/s/...'
             newLinkField.classList.add('border', 'p-2', 'w-full', 'my-1', 'outline-none', 'focus:border-blue-500', 'focus:invalid:border-pink-500', 'invalid:border-pink-500')
             newLinkField.pattern = SHARE_LINK_PATTERN
             newLinkField.addEventListener('input', validate_all_link_fields)
