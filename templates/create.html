@@ -45,7 +45,7 @@
             const newLinkField = document.createElement('input')
             newLinkField.name = 'link-field'
             newLinkField.type = 'text'
-            newLinkField.placeholder = 'Paste a Nextcloud share link'
+            newLinkField.placeholder = 'https://cloud.execvebin.sh/index.php/s/...'
             newLinkField.classList.add('border', 'p-2', 'w-full', 'my-1', 'outline-none', 'focus:border-blue-500', 'focus:invalid:border-pink-500', 'invalid:border-pink-500')
             newLinkField.pattern = SHARE_LINK_PATTERN
             newLinkField.addEventListener('input', validate_all_link_fields)
