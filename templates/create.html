@@ -1,10 +1,23 @@
-<html>
-    <head>
-        <title>Create a new visualization</title>
-    </head>
-    <body>
-        <div>
-            <input />
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Create a new visualization</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div class="h-full w-min mx-auto p-16">
+      <h1 class="font-bold text-3xl my-8 whitespace-nowrap">Create a new visualization</h1>
+      <div class="my-8">
+        <div id="link-fields">
+          <input type="text" placeholder="Paste a Nextcloud share link" class="border p-2 w-full my-1">
+          <input type="text" placeholder="Paste a Nextcloud share link" class="border p-2 w-full my-1">
+          <input type="text" placeholder="Paste a Nextcloud share link" class="border p-2 w-full my-1">
         </div>
-    </body>
+        <button class="bg-green-500 text-white px-4 py-2 my-1 rounded">Add another link</button>
+      </div>
+      <button class="bg-blue-500 text-white px-4 py-2 rounded">Generate the visualization</button>
+    </div>
+  </body>
 </html>
