@@ -13,7 +13,7 @@
         <div id="link-fields"></div>
         <button id="add-link-field-button" class="bg-green-500 text-white px-4 py-2 my-1 rounded">Add another link</button>
       </div>
-      <button class="bg-blue-500 text-white px-4 py-2 rounded">Generate the visualization</button>
+      <button id="generate-visualization-button" class="bg-blue-500 text-white px-4 py-2 rounded">Generate the visualization</button>
     </div>
 
     <script type="module">
@@ -26,7 +26,15 @@
             document.getElementById('link-fields').appendChild(newLinkField)
 
         }
+
+        function generateVisualization() {
+            for (const linkField of document.getElementById('link-fields').children) {
+                console.log(linkField.value)
+            }
+        }
+
         document.getElementById('add-link-field-button').addEventListener('click', addLinkField);
+        document.getElementById('generate-visualization-button').addEventListener('click', generateVisualization);
 
         // Add initial link field
         addLinkField()
