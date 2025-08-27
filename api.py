@@ -31,6 +31,10 @@ def serve(request: Request) -> HTMLResponse:
         context={"og_image_url": _construct_preview_image_url(request)},
     )
 
+@app.get("/create")
+def serve_create_page() -> FileResponse:
+    return FileResponse("templates/create.html")
+
 @app.get("/preview-image")
 def generate_preview_image(track: Annotated[list[str], Query()]) -> Response:
     gpx = pd.DataFrame()
