@@ -20,6 +20,18 @@
         const SHARE_LINK_PATTERN = '{{ nextcloud_base_url }}/index.php/s/(\\w+)'
         const LINK_CHECKER = RegExp(SHARE_LINK_PATTERN)
 
+        function addLinkField() {
+            const newLinkField = document.createElement('input')
+            newLinkField.name = 'link-field'
+            newLinkField.type = 'text'
+            newLinkField.placeholder = '{{ nextcloud_base_url }}/index.php/s/...'
+            newLinkField.classList.add('border', 'p-2', 'w-full', 'my-1', 'outline-none', 'focus:border-blue-500', 'focus:invalid:border-pink-500', 'invalid:border-pink-500')
+            newLinkField.pattern = SHARE_LINK_PATTERN
+            newLinkField.addEventListener('input', validate_all_link_fields)
+
+            document.getElementById('link-fields').appendChild(newLinkField)
+        }
+
         function validate_all_link_fields() {
             var any_field_has_content = false
             var no_field_is_invalid = true
@@ -39,18 +51,6 @@
             } else {
                 submitButton.setAttribute('disabled', true)
             }
-        }
-
-        function addLinkField() {
-            const newLinkField = document.createElement('input')
-            newLinkField.name = 'link-field'
-            newLinkField.type = 'text'
-            newLinkField.placeholder = '{{ nextcloud_base_url }}/index.php/s/...'
-            newLinkField.classList.add('border', 'p-2', 'w-full', 'my-1', 'outline-none', 'focus:border-blue-500', 'focus:invalid:border-pink-500', 'invalid:border-pink-500')
-            newLinkField.pattern = SHARE_LINK_PATTERN
-            newLinkField.addEventListener('input', validate_all_link_fields)
-
-            document.getElementById('link-fields').appendChild(newLinkField)
         }
 
         function generateVisualization() {
