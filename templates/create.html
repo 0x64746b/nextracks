@@ -10,14 +10,26 @@
     <div class="h-full w-min mx-auto p-16">
       <h1 class="font-bold text-3xl my-8 whitespace-nowrap">Create a new visualization</h1>
       <div class="my-8">
-        <div id="link-fields">
-          <input type="text" placeholder="Paste a Nextcloud share link" class="border p-2 w-full my-1">
-          <input type="text" placeholder="Paste a Nextcloud share link" class="border p-2 w-full my-1">
-          <input type="text" placeholder="Paste a Nextcloud share link" class="border p-2 w-full my-1">
-        </div>
-        <button class="bg-green-500 text-white px-4 py-2 my-1 rounded">Add another link</button>
+        <div id="link-fields"></div>
+        <button id="add-link-field-button" class="bg-green-500 text-white px-4 py-2 my-1 rounded">Add another link</button>
       </div>
       <button class="bg-blue-500 text-white px-4 py-2 rounded">Generate the visualization</button>
     </div>
+
+    <script type="module">
+        function addLinkField() {
+            const newLinkField = document.createElement('input')
+            newLinkField.type = 'text'
+            newLinkField.placeholder = 'Paste a Nextcloud share link'
+            newLinkField.classList.add('border', 'p-2', 'w-full', 'my-1')
+
+            document.getElementById('link-fields').appendChild(newLinkField)
+
+        }
+        document.getElementById('add-link-field-button').addEventListener('click', addLinkField);
+
+        // Add initial link field
+        addLinkField()
+    </script>
   </body>
 </html>
