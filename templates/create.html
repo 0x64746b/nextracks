@@ -68,20 +68,14 @@
             }
         }
 
-        function generateVisualization() {
-            const trackIds = new Set()
-            for (const linkField of document.getElementsByName('link-field')) {
-                const trackMatch = linkField.value.match(SHARE_LINK_PATTERN)
-                if (trackMatch) {
-                    trackIds.add(trackMatch[1])
-                }
-            }
-            const trackParams = Array.from(trackIds).map(id => `track=${id}`).join('&')
-            window.location.href = `/?${trackParams}`
+        function switchToIndexPage() {
+            // The structure of the URL of the index page is intentionally
+            // identical to that of this create page - besides the path, that is.
+            window.location.pathname = '/'
         }
 
         document.getElementById('add-link-field-button').addEventListener('click', () => addLinkField());
-        document.getElementById('generate-visualization-button').addEventListener('click', generateVisualization);
+        document.getElementById('generate-visualization-button').addEventListener('click', switchToIndexPage);
 
         // Add initial link fields
         initializeLinkFields()
