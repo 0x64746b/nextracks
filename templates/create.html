@@ -45,20 +45,23 @@
         }
 
         function validate_all_link_fields() {
-            var any_field_has_content = false
-            var no_field_is_invalid = true
+            // Extract IDs from share links
+            const trackIds = new Set()
+            let trackMatch
 
             for (const linkField of document.getElementsByName('link-field')) {
-                if (!!linkField.value) {
-                    any_field_has_content = true
-                }
-                if (!!linkField.value && !LINK_CHECKER.test(linkField.value)) {
-                    no_field_is_invalid = false
+                if (trackMatch = linkField.value.match(SHARE_LINK_PATTERN)) {
+                    trackIds.add(trackMatch[1])
                 }
             }
 
+            // Update URL with extracted IDs
+            const trackParams = new URLSearchParams(Array.from(trackIds).map(id => ['track', id]))
+            window.history.pushState(null, '', `?${ trackParams }`)
+
+            // Handle state of submit button
             const submitButton = document.getElementById('generate-visualization-button')
-            if (any_field_has_content && no_field_is_invalid) {
+            if (!!trackIds.size) {
                 submitButton.removeAttribute('disabled')
             } else {
                 submitButton.setAttribute('disabled', true)
