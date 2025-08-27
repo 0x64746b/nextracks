@@ -20,7 +20,18 @@
         const SHARE_LINK_PATTERN = '{{ nextcloud_base_url }}/index.php/s/(\\w+)'
         const LINK_CHECKER = RegExp(SHARE_LINK_PATTERN)
 
-        function addLinkField() {
+        function initializeLinkFields() {
+            const trackIds = new URLSearchParams(window.location.search).getAll('track')
+            if (!trackIds.length) {
+                addLinkField()
+            } else {
+                for (const trackId of trackIds) {
+                    addLinkField(`{{ nextcloud_base_url }}/index.php/s/${ trackId }`)
+                }
+            }
+        }
+
+        function addLinkField(value = null) {
             const newLinkField = document.createElement('input')
             newLinkField.name = 'link-field'
             newLinkField.type = 'text'
@@ -28,6 +39,7 @@
             newLinkField.classList.add('border', 'p-2', 'w-full', 'my-1', 'outline-none', 'focus:border-blue-500', 'focus:invalid:border-pink-500', 'invalid:border-pink-500')
             newLinkField.pattern = SHARE_LINK_PATTERN
             newLinkField.addEventListener('input', validate_all_link_fields)
+            newLinkField.value = value
 
             document.getElementById('link-fields').appendChild(newLinkField)
         }
@@ -65,11 +77,11 @@
             window.location.href = `/?${trackParams}`
         }
 
-        document.getElementById('add-link-field-button').addEventListener('click', addLinkField);
+        document.getElementById('add-link-field-button').addEventListener('click', () => addLinkField());
         document.getElementById('generate-visualization-button').addEventListener('click', generateVisualization);
 
-        // Add initial link field
-        addLinkField()
+        // Add initial link fields
+        initializeLinkFields()
         validate_all_link_fields()
     </script>
   </body>
