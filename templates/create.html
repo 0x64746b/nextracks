@@ -19,17 +19,17 @@
     <script type="module">
         function addLinkField() {
             const newLinkField = document.createElement('input')
+            newLinkField.name = 'link-field'
             newLinkField.type = 'text'
             newLinkField.placeholder = 'Paste a Nextcloud share link'
             newLinkField.classList.add('border', 'p-2', 'w-full', 'my-1', 'outline-none', 'focus:border-blue-500', 'focus:invalid:border-pink-500', 'invalid:border-pink-500')
             newLinkField.pattern = 'https://cloud.execvebin.sh/index.php/s/\\w+'
 
             document.getElementById('link-fields').appendChild(newLinkField)
-
         }
 
         function generateVisualization() {
-            for (const linkField of document.getElementById('link-fields').children) {
+            for (const linkField of document.getElementsByName('link-field')) {
                 console.log(linkField.value)
             }
         }
