@@ -17,7 +17,7 @@
     </div>
 
     <script type="module">
-        const SHARE_LINK_PATTERN = 'https://cloud.execvebin.sh/index.php/s/\\w+'
+        const SHARE_LINK_PATTERN = 'https://cloud.execvebin.sh/index.php/s/(\\w+)'
         const LINK_CHECKER = RegExp(SHARE_LINK_PATTERN)
 
         function validate_all_link_fields() {
@@ -54,9 +54,15 @@
         }
 
         function generateVisualization() {
+            const trackIds = new Set()
             for (const linkField of document.getElementsByName('link-field')) {
-                console.log(linkField.value)
+                const trackMatch = linkField.value.match(SHARE_LINK_PATTERN)
+                if (trackMatch) {
+                    trackIds.add(trackMatch[1])
+                }
             }
+            const trackParams = Array.from(trackIds).map(id => `track=${id}`).join('&')
+            window.location.href = `/?${trackParams}`
         }
 
         document.getElementById('add-link-field-button').addEventListener('click', addLinkField);
