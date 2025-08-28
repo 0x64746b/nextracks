@@ -5,7 +5,7 @@ from typing import Annotated
 
 import contextily as cx
 from fastapi import FastAPI, HTTPException, Query, Request
-from fastapi.responses import FileResponse, HTMLResponse, Response
+from fastapi.responses import HTMLResponse, Response
 from fastapi.templating import Jinja2Templates
 from gpx_converter import Converter
 import matplotlib
@@ -29,6 +29,14 @@ def serve(request: Request) -> HTMLResponse:
         request=request,
         name="index.html",
         context={"og_image_url": _construct_preview_image_url(request)},
+    )
+
+@app.get("/create")
+def serve_create_page(request: Request) -> HTMLResponse:
+    return templates.TemplateResponse(
+        request=request,
+        name="create.html",
+        context={"nextcloud_base_url": f"https://{os.environ['NEXTRACKS_NC_DOMAIN']}"},
     )
 
 @app.get("/preview-image")

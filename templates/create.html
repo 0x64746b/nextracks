@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Create a new visualization</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div class="h-full w-min mx-auto p-16">
+      <h1 class="font-bold text-3xl my-8 whitespace-nowrap">Create a new visualization</h1>
+      <div class="my-8">
+        <div id="link-fields"></div>
+        <button id="add-link-field-button" class="bg-green-500 text-white px-4 py-2 my-1 rounded">Add another link</button>
+      </div>
+      <button id="generate-visualization-button" class="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-300">Generate the visualization</button>
+    </div>
+
+    <script type="module">
+        const SHARE_LINK_PATTERN = '{{ nextcloud_base_url }}/index.php/s/(\\w+)'
+        const LINK_CHECKER = RegExp(SHARE_LINK_PATTERN)
+
+        function initializeLinkFields() {
+            const trackIds = new URLSearchParams(window.location.search).getAll('track')
+            if (!trackIds.length) {
+                addLinkField()
+            } else {
+                for (const trackId of trackIds) {
+                    addLinkField(`{{ nextcloud_base_url }}/index.php/s/${ trackId }`)
+                }
+            }
+        }
+
+        function addLinkField(value = null) {
+            const newLinkField = document.createElement('input')
+            newLinkField.name = 'link-field'
+            newLinkField.type = 'text'
+            newLinkField.placeholder = '{{ nextcloud_base_url }}/index.php/s/...'
+            newLinkField.classList.add('border', 'p-2', 'w-full', 'my-1', 'outline-none', 'focus:border-blue-500', 'focus:invalid:border-pink-500', 'invalid:border-pink-500')
+            newLinkField.pattern = SHARE_LINK_PATTERN
+            newLinkField.addEventListener('input', process_link_fields)
+            newLinkField.value = value
+
+            document.getElementById('link-fields').appendChild(newLinkField)
+        }
+
+        /**
+         * Update the URL state and manage the state of the submit button
+         */
+        function process_link_fields() {
+            const trackIds = _extractTrackIds()
+            _updateUrlState(trackIds)
+            _enableSubmitButton(!!trackIds.length)
+        }
+
+        /**
+         * Extract IDs from share links
+         */
+        function _extractTrackIds() {
+            const trackIds = new Set()
+            let trackMatch
+
+            for (const linkField of document.getElementsByName('link-field')) {
+                if (trackMatch = linkField.value.match(SHARE_LINK_PATTERN)) {
+                    trackIds.add(trackMatch[1])
+                }
+            }
+
+            return Array.from(trackIds)
+        }
+
+        /**
+         * Persist track IDs in URL
+         *
+         * Prevent a page reload to avoid an infinite loop when initially
+         * validating the fields.
+         */
+        function _updateUrlState(trackIds) {
+            const targetUrl = trackIds.length ? `?${ new URLSearchParams(trackIds.map(id => ['track', id])) }` : window.location.pathname
+            window.history.pushState(null, '', targetUrl)
+        }
+
+        /**
+         * Handle state of submit button
+         */
+        function _enableSubmitButton(enable) {
+            const submitButton = document.getElementById('generate-visualization-button')
+            if (enable) {
+                submitButton.removeAttribute('disabled')
+            } else {
+                submitButton.setAttribute('disabled', true)
+            }
+        }
+
+        function switchToIndexPage() {
+            // The structure of the URL of the index page is intentionally
+            // identical to that of this create page - besides the path, that is.
+            window.location.pathname = '/'
+        }
+
+        document.getElementById('add-link-field-button').addEventListener('click', () => addLinkField());
+        document.getElementById('generate-visualization-button').addEventListener('click', switchToIndexPage);
+
+        // Add initial link fields
+        initializeLinkFields()
+        process_link_fields()
+    </script>
+  </body>
+</html>
